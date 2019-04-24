@@ -4,7 +4,8 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.IO" #>
-<#@ assembly name="$(SolutionDir)\T4EntitySupportLib_NET_Framework\bin\Debug\T4EntitySupportLib_NET_Framework.dll" #>
+<#@ assembly name="$(SolutionDir)\$(ParentName)\bin\Dapper.dll" #>
+<#@ assembly name="$(SolutionDir)\$(ParentName)\bin\T4EntitySupportLib_NET_Framework.dll" #>
 <#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
 <#@ output extension=".cs" #>
 
