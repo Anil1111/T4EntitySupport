@@ -1,0 +1,51 @@
+﻿<#@ template language="C#" hostspecific="true" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<#@ assembly name="$(SolutionDir)\T4EntitySupportLib_NET_Framework\bin\Debug\T4EntitySupportLib_NET_Framework.dll" #>
+<#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
+<#@ output extension=".cs" #>
+
+<#
+string ConnectionString = "{Your ConnectionString}";  // 設定您的ConnectionString
+string NameSpace = "{Your NameSpace}";                // 設定您的NameSpace
+
+var tableRepository = new T4EntitySupportLib.TableRepository(ConnectionString);
+var tables = tableRepository.GetTables();
+var sqlType = new T4EntitySupportLib.MSSqlDataType();
+foreach(var table in tables) {
+#>Co
+using System;
+
+namespace <#=NameSpace#>
+{
+	public class <#=table#>
+	{
+<#
+	foreach(var prop in tableRepository.GetTableProperties(table))
+	{
+#>
+		public <#=sqlType.ToCSharpType(prop.data_type, prop.is_nullable == "YES")#> <#=prop.column_name#> { get; set; }
+<#
+	}
+#>
+	}
+}
+<#
+  // End of file.
+  SaveOutput(table + ".cs");
+}
+#>
+
+
+<#
+   void SaveOutput(string outputFileName)
+  {
+      string templateDirectory = Path.GetDirectoryName(Host.TemplateFile);
+      string outputFilePath = Path.Combine(templateDirectory, outputFileName);
+      File.WriteAllText(outputFilePath,this.GenerationEnvironment.ToString()); 
+      this.GenerationEnvironment.Remove(0,this.GenerationEnvironment.Length);
+  }
+#>
